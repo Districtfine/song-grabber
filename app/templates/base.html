@@ -1,0 +1,30 @@
+{% extends 'bootstrap/base.html' %}
+
+{% block title %}
+    Playlistimate
+{% endblock %}
+
+{% block content %}
+    {% if result %}
+        {% if result.success is eq(True) %}
+            <div class="alert alert-success" role="alert">
+                Playlist successfully created!
+            </div>
+        {% else %}
+            <div class="alert alert-danger" role="alert">
+                Playlist was not create succesfully, try again
+            </div>
+        {% endif %}
+    {% endif %}
+    <form action="" method="post" novalidate>
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.url.label }}<br>
+            {{ form.url(size=32) }}
+            {% for error in form.url.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>{{ form.submit() }}</p>
+    </form>
+{% endblock %}
