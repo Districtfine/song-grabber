@@ -1,4 +1,4 @@
-{% extends 'bootstrap/base.html' %}
+{% extends 'layout.html' %}
 
 {% block title %}
     Playlistimate
@@ -16,15 +16,26 @@
             </div>
         {% endif %}
     {% endif %}
-    <form action="" method="post" novalidate>
-        {{ form.hidden_tag() }}
-        <p>
-            {{ form.url.label }}<br>
-            {{ form.url(size=32) }}
-            {% for error in form.url.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-        </p>
-        <p>{{ form.submit() }}</p>
-    </form>
+        <div class="container d-flex vh-100">
+            <div class="col align-self-center justify-content-center ml-auto mr-auto" style="max-width:32em; margin-bottom: 35%;">
+                <h1 class="text-center">
+                    Spotify Playlist Generator
+                </h1>
+                <p style="width: auto; text-align: justify">
+                    Generate spotify playlists using a reddit comment thread! This tool will find all the spotify
+                    track links in the thread and combine them all into a spotify playlist.
+                </p>
+                <form action="" method="post" novalidate>
+                    {{ form.hidden_tag() }}
+                    <div class="input-group mr-auto ml-auto mt-3" style="width: auto;">
+                        <input type="text" class="form-control" name="url" placeholder="Reddit comment thread URL">
+                        <span class="input-group-append">
+                            <button type="submit" class="btn btn-primary">
+                                Generate Playlist
+                            </button>
+                        </span>
+                    </div>
+                </form>
+            </div>
+        </div>
 {% endblock %}
