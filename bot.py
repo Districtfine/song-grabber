@@ -6,12 +6,20 @@ import os
 import sys
 
 def generate_playlist(threadInput, sp):
-    reddit = praw.Reddit('readBot')
+    try:
+        reddit = praw.Reddit('readBot')
+    except:
+        return (False, "Could not initialize reddit bot, please try again")
 
-    submission = reddit.submission(url=threadInput)
+    redditLinkRegex = re.compile(r"redd(?:it\.com|\.it).*(?:\/comments)?(\/\w{2,7}\b)", re.IGNORECASE)
+    redditLinkMatch = redditLinkRegex.search(threadInput)
+    if redditLinkMatch:
+        try:
+            submission = reddit.submission(id=redditLinkMatch.group[1][1:])
+        except:
+            return (False, "Could not retrieve comment thread, please try again") 
 
-    songURIs = []
-
+    # Expand out submission commment forest TODO: Find out whether a limit of 1 is acceptable
     while True:
         try:
             submission.comments.replace_more()
@@ -19,6 +27,7 @@ def generate_playlist(threadInput, sp):
         except:
             continue
 
+    songURIs = []
     for comment in submission.comments.list():
         if "open.spotify.com/track/" in comment.body:
             spotifyLinkRegex = re.compile(r"https?://open.spotify.com/track/[^ \)]+", re.IGNORECASE)
@@ -29,17 +38,22 @@ def generate_playlist(threadInput, sp):
                 URIRegex = re.compile(r"track/([a-zA-Z0-9]*)(\?|$)")
                 songURIMatch = URIRegex.search(fullLink)
                 if songURIMatch:
-                    songURIs.append(songURIMatch.group(1)) # Strip out first '/' and last '?'
+                    songURIs.append(songURIMatch.group(1))
                 # Something has gone horribly wrong, all song links should have URIs
                 else: 
-                    # TODO: Do some proper error handling here
-                    return False
+                    return (False, "Problem encountered while searching comment thread")
                     
     # Remove duplicates from song list
     songURIs = list(dict.fromkeys(songURIs))
 
     playlistName = threadInput[:99]
     sp.trace = False
-    playlist = sp.user_playlist_create(sp.me()['id'], playlistName, False)
-    sp.user_playlist_add_tracks(sp.me()['id'], playlist['id'], songURIs[0:9999])
-    return True
+    try:
+        playlist = sp.user_playlist_create(sp.me()['id'], playlistName, False)
+    except:
+        return (False, "Problem encounted while creating playlist, please try again")
+    try:
+        sp.user_playlist_add_tracks(sp.me()['id'], playlist['id'], songURIs[0:9999])
+    except:
+        return (False, "Problem encountered while adding tracks to playlist, please try again")
+    return (True, "Success")

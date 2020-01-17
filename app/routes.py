@@ -63,7 +63,7 @@ def api_callback():
         return redirect('/')
     sp = spotipy.Spotify(auth=session.get('token_info').get('access_token'))
     success = generate_playlist(session.get('reddit_url'), sp)
-    result = {'success': success}
+    result = {'success': success[0], 'message': success[1]}
     session.clear()
     session['result'] = result
 

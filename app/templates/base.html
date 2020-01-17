@@ -7,17 +7,23 @@
 {% block content %}
     {% if result %}
         {% if result.success is eq(True) %}
-            <div class="alert alert-success" role="alert">
+            <div class="alert-messages alert alert-success alert-dismissible fade show text-center" role="alert">
                 Playlist successfully created!
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
             </div>
         {% else %}
-            <div class="alert alert-danger" role="alert">
-                Playlist was not create succesfully, try again
+            <div class="alert-messages alert alert-danger alert-dismissible fade show text-center" role="alert">
+                {{ result.message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
             </div>
         {% endif %}
     {% endif %}
         <div class="container d-flex vh-100">
-            <div class="col align-self-center justify-content-center ml-auto mr-auto" style="max-width:32em; margin-bottom: 35%;">
+            <div class="col ml-auto mr-auto" style="max-width:32em; margin-top: 25%;">
                 <h1 class="text-center">
                     Spotify Playlist Generator
                 </h1>
@@ -27,6 +33,11 @@
                 </p>
                 <form action="" method="post" novalidate>
                     {{ form.hidden_tag() }}
+                    {% for error in form.url.errors %}
+                    <div class="alert alert-danger" role="alert">
+                        {{ error }}
+                    </div>
+                    {% endfor %}
                     <div class="input-group mr-auto ml-auto mt-3" style="width: auto;">
                         <input type="text" class="form-control" name="url" placeholder="Reddit comment thread URL">
                         <span class="input-group-append">
