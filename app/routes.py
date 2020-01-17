@@ -10,9 +10,6 @@ from bot import generate_playlist
 
 API_BASE = 'https://accounts.spotify.com'
 
-# Make sure you add this to Redirect URIs in the setting of the application dashboard
-REDIRECT_URI = "http://127.0.0.1:5000/api_callback"
-
 SCOPE = 'playlist-modify-private'
 SHOW_DIALOG = True
 
@@ -86,7 +83,7 @@ def get_token(session):
     # Refreshing token if it has expired
     if (is_token_expired):
         # Don't reuse a SpotifyOAuth object because they store token info and you could leak user tokens if you reuse a SpotifyOAuth object
-        sp_oauth = spotipy.oauth2.SpotifyOAuth(client_id = client_id, client_secret = client_secret, redirect_uri = REDIRECT_URI, scope = SCOPE)
+        sp_oauth = spotipy.oauth2.SpotifyOAuth(client_id = client_id, client_secret = client_secret, redirect_uri = redirect_uri, scope = SCOPE)
         token_info = sp_oauth.refresh_access_token(session.get('token_info').get('refresh_token'))
 
     token_valid = True
