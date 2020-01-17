@@ -11,13 +11,15 @@ def generate_playlist(threadInput, sp):
     except:
         return (False, "Could not initialize reddit bot, please try again")
 
-    redditLinkRegex = re.compile(r"redd(?:it\.com|\.it).*(?:\/comments)?(\/\w{2,7}\b)", re.IGNORECASE)
+    redditLinkRegex = re.compile(r"redd(?:it\.com|\.it).*(?:\/comments)?(\/\w{2,7}\b)(\/.*)?", re.IGNORECASE)
     redditLinkMatch = redditLinkRegex.search(threadInput)
     if redditLinkMatch:
         try:
-            submission = reddit.submission(id=redditLinkMatch.group[1][1:])
+            submission = reddit.submission(id=redditLinkMatch.group(1)[1:])
         except:
             return (False, "Could not retrieve comment thread, please try again") 
+    else:
+        return (False, "Inputed string was not a valid reddit thread")
 
     # Expand out submission commment forest TODO: Find out whether a limit of 1 is acceptable
     while True:
@@ -46,7 +48,7 @@ def generate_playlist(threadInput, sp):
     # Remove duplicates from song list
     songURIs = list(dict.fromkeys(songURIs))
 
-    playlistName = threadInput[:99]
+    playlistName = redditLinkMatch.group(0)[:99]
     sp.trace = False
     try:
         playlist = sp.user_playlist_create(sp.me()['id'], playlistName, False)
