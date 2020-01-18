@@ -1,5 +1,6 @@
 flask
 flask-wtf
+flask-sslify
 bootstrap-flask
 spotipy
 praw

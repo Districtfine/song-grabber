@@ -39,7 +39,7 @@ def index():
 @app.errorhandler(404)
 @app.errorhandler(500)
 def error(error):
-    return redirect('index')
+    return redirect(url_for(index))
 
 # authorization-code-flow Step 2.
 # Have your application request refresh and access tokens;
@@ -61,14 +61,14 @@ def api_callback():
 
     authorized = get_token(session)
     if not authorized:
-        return redirect('/')
+        return redirect(url_for(index))
     sp = spotipy.Spotify(auth=session.get('token_info').get('access_token'))
     success = generate_playlist(session.get('reddit_url'), sp)
     result = {'success': success[0], 'message': success[1]}
     session.clear()
     session['result'] = result
 
-    return redirect('index')
+    return redirect(url_for(index))
 
 # Checks to see if token is valid and gets a new token if not
 def get_token(session):
