@@ -36,6 +36,10 @@ def index():
     else:
         return render_template('base.html', form=form)
     
+@app.errorhandler(404)
+@app.errorhandler(500)
+def error(error):
+    return redirect('index')
 
 # authorization-code-flow Step 2.
 # Have your application request refresh and access tokens;

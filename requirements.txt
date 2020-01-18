@@ -1,6 +1,6 @@
 flask
 flask-wtf
 bootstrap-flask
-python-dotenv
 spotipy
 praw
+gunicorn
