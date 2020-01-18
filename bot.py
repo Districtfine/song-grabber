@@ -7,8 +7,11 @@ import sys
 
 def generate_playlist(threadInput, sp):
     try:
-        reddit = praw.Reddit('readBot')
-    except:
+        reddit = praw.Reddit(client_id=os.getenv('PRAW_CLIENT_ID'),
+                             client_secret=os.getenv('PRAW_CLIENT_SECRET'),
+                             user_agent=os.getenv('PRAW_USER_AGENT'))
+    except Exception as e:
+        print(e)
         return (False, "Could not initialize reddit bot, please try again")
 
     redditLinkRegex = re.compile(r"redd(?:it\.com|\.it).*(?:\/comments)?(\/\w{2,7}\b)(\/.*)?", re.IGNORECASE)
@@ -24,7 +27,7 @@ def generate_playlist(threadInput, sp):
     # Expand out submission commment forest TODO: Find out whether a limit of 1 is acceptable
     while True:
         try:
-            submission.comments.replace_more()
+            submission.comments.replace_more(limit=1)
             break
         except:
             continue
