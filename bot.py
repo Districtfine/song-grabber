@@ -61,4 +61,4 @@ def generate_playlist(threadInput, sp):
         sp.user_playlist_add_tracks(sp.me()['id'], playlist['id'], songURIs[0:9999])
     except:
         return (False, "Problem encountered while adding tracks to playlist, please try again")
-    return (True, "Success")
+    return (True, "{}".format(playlist['external_urls']['spotify']))

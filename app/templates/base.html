@@ -11,11 +11,11 @@
                 $("#popup").fadeTo(600, 0, function(){
                     $(this).remove(); 
                 });
-            }, 3000);
+            }, 4000);
         </script>
         {% if result.success is eq(True) %}
             <div class="alert-messages alert alert-success alert-dismissible fade show text-center" id="popup" role="alert">
-                Playlist successfully created!
+                <a href={{ result.message }}>Playlist successfully created!</a>
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
