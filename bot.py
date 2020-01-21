@@ -15,7 +15,11 @@ def generate_playlist(threadInput, sp):
         return (False, "Could not initialize reddit bot, please try again")
 
     redditLinkRegex = re.compile(r"redd(?:it\.com|\.it).*(?:\/comments)?(\/\w{2,7}\b)(\/.*)?", re.IGNORECASE)
-    redditLinkMatch = redditLinkRegex.search(threadInput)
+    try:
+        redditLinkMatch = redditLinkRegex.search(threadInput)
+    except:
+        return (False, "Something wrong with inputed link, please try again with another")
+
     if redditLinkMatch:
         try:
             submission = reddit.submission(id=redditLinkMatch.group(1)[1:])
@@ -25,12 +29,7 @@ def generate_playlist(threadInput, sp):
         return (False, "Inputed string was not a valid reddit thread")
 
     # Expand out submission commment forest TODO: Find out whether a limit of 1 is acceptable
-    while True:
-        try:
-            submission.comments.replace_more(limit=1)
-            break
-        except:
-            continue
+    submission.comments.replace_more(limit=5)
 
     songURIs = []
     for comment in submission.comments.list():
@@ -51,14 +50,17 @@ def generate_playlist(threadInput, sp):
     # Remove duplicates from song list
     songURIs = list(dict.fromkeys(songURIs))
 
-    playlistName = redditLinkMatch.group(0)[:99]
-    sp.trace = False
-    try:
-        playlist = sp.user_playlist_create(sp.me()['id'], playlistName, False)
-    except:
-        return (False, "Problem encounted while creating playlist, please try again")
-    try:
-        sp.user_playlist_add_tracks(sp.me()['id'], playlist['id'], songURIs[0:9999])
-    except:
-        return (False, "Problem encountered while adding tracks to playlist, please try again")
-    return (True, "{}".format(playlist['external_urls']['spotify']))
+    if songURIs:
+        playlistName = redditLinkMatch.group(0)[:99]
+        sp.trace = False
+        try:
+            playlist = sp.user_playlist_create(sp.me()['id'], playlistName, False)
+        except:
+            return (False, "Problem encounted while creating playlist, please try again")
+        try:
+            sp.user_playlist_add_tracks(sp.me()['id'], playlist['id'], songURIs[0:9999])
+        except:
+            return (False, "Problem encountered while adding tracks to playlist, please try again")
+        return (True, "{}".format(playlist['external_urls']['spotify']))
+    else:
+        return (False, "No spotify links found in comment thread (this tool can sometimes miss links in very long threads)")
