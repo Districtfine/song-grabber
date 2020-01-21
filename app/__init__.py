@@ -1,7 +1,6 @@
 from flask import Flask
 from config import Config
 from flask_bootstrap import Bootstrap
-from flask_sslify import SSLify
 import logging
 from logging.handlers import RotatingFileHandler
 import os
@@ -9,7 +8,6 @@ import os
 app = Flask(__name__)
 app.config.from_object(Config)
 bootstrap = Bootstrap(app)
-# sslify = SSLify(app)
 
 from app import routes
 
