@@ -9,7 +9,7 @@ import os
 app = Flask(__name__)
 app.config.from_object(Config)
 bootstrap = Bootstrap(app)
-sslify = SSLify(app)
+# sslify = SSLify(app)
 
 from app import routes
 
