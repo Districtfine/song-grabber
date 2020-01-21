@@ -7,6 +7,7 @@ import os
 import time
 import json
 from bot import generate_playlist
+from datetime import datetime
 
 API_BASE = 'https://accounts.spotify.com'
 
@@ -32,9 +33,9 @@ def index():
         return redirect(auth_url)
 
     if 'result' in session:
-        return render_template('base.html', form=form, result=session.pop('result', None))
+        return render_template('base.html', form=form, result=session.pop('result', None), now=datetime.utcnow())
     else:
-        return render_template('base.html', form=form)
+        return render_template('base.html', form=form, now=datetime.utcnow())
     
 @app.errorhandler(404)
 @app.errorhandler(500)
