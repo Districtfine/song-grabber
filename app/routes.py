@@ -69,7 +69,11 @@ def api_callback():
     session.clear()
     session['result'] = result
 
-    return redirect(url_for('index'))
+    # If playlist successfully created, redirect user to it
+    if result['success']:
+        return redirect(result['message'])
+    else:
+        return redirect(url_for('index'))
 
 # Checks to see if token is valid and gets a new token if not
 def get_token(session):
