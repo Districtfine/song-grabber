@@ -8,10 +8,10 @@
     {% if result %}
         <script>
             setTimeout(function() {
-                $("#popup").fadeTo(600, 0, function(){
+                $("#popup").fadeTo(800, 0, function(){
                     $(this).remove(); 
                 });
-            }, 4000);
+            }, 5000);
         </script>
         {% if result.success is eq(True) %}
             <div class="alert-messages alert alert-success alert-dismissible fade show text-center" id="popup" role="alert">
